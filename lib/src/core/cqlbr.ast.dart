@@ -27,15 +27,13 @@ class CQLAST implements ICQLAST {
   CQLAST({required Database database}) {
     _select = CQLBrRegister.instance.select(database);
     _delete = CQLDelete();
-    _insert = CQLInsert();
+    _insert = CQLBrRegister.instance.insert(database) ?? CQLInsert();
     _update = CQLUpdate();
     _joins = CQLJoins();
     _having = CQLHaving();
     _orderBy = CQLOrderBy();
     _groupBy = CQLGroupBy();
-    if (CQLBrRegister.instance.where(database) == null) {
-      _where = CQLWhere();
-    }
+    _where = CQLBrRegister.instance.where(database) ?? CQLWhere();
     _astSection = null;
     _astTableNames = null;
     _astColumns = null;

@@ -2,6 +2,7 @@ import '../interface/cqlbr.interface.dart';
 
 class CQLBrRegister {
   late final Map<Database, ICQLSelect> cqlSelect;
+  late final Map<Database, ICQLInsert> cqlInsert;
   late final Map<Database, ICQLWhere> cqlWhere;
   late final Map<Database, ICQLSerialize> cqlSerialize;
   late final Map<Database, ICQLFunctions> cqlFunctions;
@@ -10,6 +11,7 @@ class CQLBrRegister {
 
   CQLBrRegister._() {
     cqlSelect = {};
+    cqlInsert = {};
     cqlWhere = {};
     cqlSerialize = {};
     cqlFunctions = {};
@@ -19,6 +21,10 @@ class CQLBrRegister {
 
   void registerSelect(Database database, ICQLSelect select) {
     cqlSelect[database] = select;
+  }
+
+  void registerInsert(Database database, ICQLInsert insert) {
+    cqlInsert[database] = insert;
   }
 
   void registerWhere(Database database, ICQLWhere where) {
@@ -38,6 +44,13 @@ class CQLBrRegister {
       throw Exception('Select not registered for database: $database');
     }
     return cqlSelect[database]!;
+  }
+
+  ICQLInsert? insert(Database database) {
+    if (!cqlInsert.containsKey(database)) {
+      return null;
+    }
+    return cqlInsert[database]!;
   }
 
   ICQLWhere? where(Database database) {
