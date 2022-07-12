@@ -1,13 +1,9 @@
 import '../interface/cqlbr.interface.dart';
-import 'cqlbr.delete.dart';
 import 'cqlbr.groupby.dart';
 import 'cqlbr.having.dart';
-import 'cqlbr.insert.dart';
 import 'cqlbr.joins.dart';
 import 'cqlbr.orderby.dart';
 import 'cqlbr.register.dart';
-import 'cqlbr.update.dart';
-import 'cqlbr.where.dart';
 
 class CQLAST implements ICQLAST {
   late final ICQLSelect _select;
@@ -26,14 +22,14 @@ class CQLAST implements ICQLAST {
 
   CQLAST({required Database database}) {
     _select = CQLBrRegister.instance.select(database);
-    _delete = CQLDelete();
-    _insert = CQLBrRegister.instance.insert(database) ?? CQLInsert();
-    _update = CQLUpdate();
+    _insert = CQLBrRegister.instance.insert(database);
+    _update = CQLBrRegister.instance.update(database);
+    _delete = CQLBrRegister.instance.delete(database);
+    _where = CQLBrRegister.instance.where(database);
     _joins = CQLJoins();
     _having = CQLHaving();
     _orderBy = CQLOrderBy();
     _groupBy = CQLGroupBy();
-    _where = CQLBrRegister.instance.where(database) ?? CQLWhere();
     _astSection = null;
     _astTableNames = null;
     _astColumns = null;
@@ -107,7 +103,7 @@ class CQLAST implements ICQLAST {
   }
 
   @override
-  ICQLJoins joins$() {
+  ICQLJoins joins() {
     return _joins;
   }
 

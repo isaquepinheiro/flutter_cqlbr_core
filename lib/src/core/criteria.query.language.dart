@@ -1,11 +1,4 @@
-import '../interface/cqlbr.interface.dart';
-import 'cqlbr.ast.dart';
-import 'cqlbr.cases.dart';
-import 'cqlbr.expression.dart';
-import 'cqlbr.functions.dart';
-import 'cqlbr.operators.dart';
-import 'cqlbr.register.dart';
-import 'cqlbr.utils.dart';
+import 'package:flutter_cqlbr_core/flutter_cqlbr_core.dart';
 
 enum Section {
   secSelect,
@@ -38,11 +31,15 @@ class CQLBr implements ICQL {
     _activeOperator = Operator.opeNone;
     _ast = CQLAST(database: _select.driver);
     _ast.clear();
+//    _operators = CQLBrRegister.instance.cqlOperators[_select.driver]!;
     _operators = CQLOperators(database: _select.driver);
     _functions = CQLFunctions(database: _select.driver);
     _activeExpression = null;
     _activeValues = null;
   }
+
+  ICQLSelect get select => _select;
+  ICQLAST get ast => _ast;
 
   @override
   ICQL as$(String alias) {
@@ -56,7 +53,7 @@ class CQLBr implements ICQL {
   @override
   ICQL all$() {
     if (_select.driver == Database.dbnMongoDB ||
-        _select.driver == Database.dbnFirebase) {
+        _select.driver == Database.dbnFirestore) {
       return this;
     }
 
@@ -77,10 +74,10 @@ class CQLBr implements ICQL {
   }
 
   @override
-  String asString() {
+  T asResult<T extends Object>() {
     _activeOperator = Operator.opeNone;
 
-    return CQLBrRegister.instance.serialize(_select.driver).asString(_ast);
+    return CQLBrRegister.instance.serialize(_select.driver).asResult<T>(_ast);
   }
 
   @override
@@ -274,9 +271,9 @@ class CQLBr implements ICQL {
   @override
   ICQL from$(dynamic tableName, [String alias = '']) {
     if (tableName is ICQLCriteriaExpression) {
-      from$('(${(tableName as CQLCriteriaExpression).asString()})');
+      from$('(${(tableName as CQLCriteriaExpression).asResult<String>()})');
     } else if (tableName is ICQL) {
-      from$('(${(tableName as CQLBr).asString()})');
+      from$('(${(tableName as CQLBr).asResult()})');
     }
     _assertSection([Section.secSelect, Section.secDelete]);
     _ast.astName = _ast.astTableNames!.add();
@@ -595,7 +592,7 @@ class CQLBr implements ICQL {
           '\'${Utils.instance.dateTimeToSQLFormat(_select.driver, columnValue)}\'');
     }
 
-    return _internalSet(columnName, '\'$columnValue\'');
+    return _internalSet(columnName, columnValue);
   }
 
   @override
@@ -643,7 +640,7 @@ class CQLBr implements ICQL {
           columnName, Utils.instance.sqlParamsToStr(columnValue));
     }
 
-    return _internalSet(columnName, '\'$columnValue\'');
+    return _internalSet(columnName, columnValue);
   }
 
   @override
@@ -697,7 +694,7 @@ class CQLBr implements ICQL {
 
   ICQL _createJoin(JoinType joinType, String tableName) {
     _activeSection = Section.secJoin;
-    final ICQLJoin join = _ast.joins$().add;
+    final ICQLJoin join = _ast.joins().add;
     join.joinType = joinType;
     _ast.astName = join.joinedTable;
     _ast.astName!.name = tableName;
@@ -708,7 +705,7 @@ class CQLBr implements ICQL {
     return this;
   }
 
-  ICQL _internalSet(String columnName, String columnValue) {
+  ICQL _internalSet(String columnName, dynamic columnValue) {
     _assertSection([Section.secInsert, Section.secUpdate]);
     final ICQLNameValue pair = _activeValues!.add();
     pair.name = columnName;
@@ -785,6 +782,22 @@ class CQLBr implements ICQL {
     _activeValues = _ast.update().values();
   }
 
+  void _defineSectionGroupBy() {
+    _ast.astSection = _ast.groupBy();
+    _ast.astColumns = _ast.groupBy().columns;
+    _ast.astTableNames = null;
+    _activeExpression = null;
+    _activeValues = null;
+  }
+
+  void _defineSectionOrderBy() {
+    _ast.astSection = _ast.orderBy();
+    _ast.astColumns = _ast.orderBy().columns();
+    _ast.astTableNames = null;
+    _activeExpression = null;
+    _activeValues = null;
+  }
+
   void _defineSectionWhere() {
     _ast.astSection = _ast.where();
     _ast.astColumns = null;
@@ -794,28 +807,12 @@ class CQLBr implements ICQL {
     _activeValues = null;
   }
 
-  void _defineSectionGroupBy() {
-    _ast.astSection = _ast.groupBy();
-    _ast.astColumns = _ast.groupBy().columns;
-    _ast.astTableNames = null;
-    _activeExpression = null;
-    _activeValues = null;
-  }
-
   void _defineSectionHaving() {
     _ast.astSection = _ast.having();
     _ast.astColumns = null;
 //    _ast.astTableNames = null;
     _activeExpression =
         CQLCriteriaExpression(expression: _ast.having().expression);
-    _activeValues = null;
-  }
-
-  void _defineSectionOrderBy() {
-    _ast.astSection = _ast.orderBy();
-    _ast.astColumns = _ast.orderBy().columns();
-    _ast.astTableNames = null;
-    _activeExpression = null;
     _activeValues = null;
   }
 }

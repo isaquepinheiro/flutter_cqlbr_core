@@ -16,10 +16,10 @@ class CQLWhere extends CQLSection implements ICQLWhere {
   set expression(ICQLExpression value) => _expression = value;
 
   @override
-  String serialize() {
+  T serialize<T extends Object>() {
     return isEmpty()
-        ? ''
-        : Utils.instance.concat(['WHERE', _expression.serialize()]);
+        ? '' as T
+        : Utils.instance.concat(['WHERE', _expression.serialize<T>()]) as T;
   }
 
   @override

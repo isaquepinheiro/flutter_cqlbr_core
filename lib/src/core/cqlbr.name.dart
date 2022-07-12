@@ -39,14 +39,14 @@ class CQLName implements ICQLName {
   }
 
   @override
-  String serialize() {
+  T serialize<T extends Object>() {
     String result = _case != null ? '(${_case!.serialize()})' : _name;
 
     if (_alias.isNotEmpty) {
       result = Utils.instance.concat([result, 'AS', _alias]);
     }
 
-    return result;
+    return result as T;
   }
 }
 
@@ -89,7 +89,7 @@ class CQLNames implements ICQLNames {
   }
 
   @override
-  String serialize() {
+  T serialize<T extends Object>() {
     String result = '';
 
     for (final ICQLName column in _columns) {
@@ -101,7 +101,7 @@ class CQLNames implements ICQLNames {
       }
     }
 
-    return result;
+    return result as T;
   }
 
   String _serializeName(ICQLName name) {

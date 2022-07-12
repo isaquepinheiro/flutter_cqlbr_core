@@ -2,7 +2,7 @@ import '../interface/cqlbr.interface.dart';
 
 class CQLNameValue implements ICQLNameValue {
   late String _name;
-  late String _value;
+  late dynamic _value;
 
   @override
   String get name => _name;
@@ -10,9 +10,9 @@ class CQLNameValue implements ICQLNameValue {
   set name(String value) => _name = value;
 
   @override
-  String get value => _value;
+  dynamic get value => _value;
   @override
-  set value(String value) => _value = value;
+  set value(dynamic value) => _value = value;
 
   @override
   void clear() {

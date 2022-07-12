@@ -33,12 +33,12 @@ class CQLOperator implements ICQLOperator {
   set value(var value) => _value = value;
 
   @override
-  String asString() {
+  T asResult<T extends Object>() {
     return Utils.instance.concat([
       _columnName,
       _compare.name,
       _getCompareValue(),
-    ]);
+    ]) as T;
   }
 
   String _getCompareValue() {
@@ -179,108 +179,121 @@ class CQLOperators implements ICQLOperators {
 
   @override
   String isEqual(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcEqual).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcEqual)
+        .asResult<String>();
   }
 
   @override
   String isExists(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcExists).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcExists)
+        .asResult<String>();
   }
 
   @override
   String isGreaterEqThan(dynamic value) {
     return _createOperator('', value, CQLOperatorCompare.fcGreaterEqual)
-        .asString();
+        .asResult<String>();
   }
 
   @override
   String isGreaterThan(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcGreater).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcGreater)
+        .asResult<String>();
   }
 
   @override
   String isIn(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcIn).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcIn)
+        .asResult<String>();
   }
 
   @override
   String isLessEqThan(dynamic value) {
     return _createOperator('', value, CQLOperatorCompare.fcLessEqual)
-        .asString();
+        .asResult<String>();
   }
 
   @override
   String isLessThan(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLess).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcLess)
+        .asResult<String>();
   }
 
   @override
   String isLike(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLike).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcLike)
+        .asResult<String>();
   }
 
   @override
   String isLikeFull(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLikeFull).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcLikeFull)
+        .asResult<String>();
   }
 
   @override
   String isLikeLeft(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLikeLeft).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcLikeLeft)
+        .asResult<String>();
   }
 
   @override
   String isLikeRight(String value) {
     return _createOperator('', value, CQLOperatorCompare.fcLikeRight)
-        .asString();
+        .asResult<String>();
   }
 
   @override
   String isNotEqual(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotEqual).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcNotEqual)
+        .asResult<String>();
   }
 
   @override
   String isNotExists(String value) {
     return _createOperator('', value, CQLOperatorCompare.fcNotExists)
-        .asString();
+        .asResult<String>();
   }
 
   @override
   String isNotIn(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotIn).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcNotIn)
+        .asResult<String>();
   }
 
   @override
   String isNotLike(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotLike).asString();
+    return _createOperator('', value, CQLOperatorCompare.fcNotLike)
+        .asResult<String>();
   }
 
   @override
   String isNotLikeFull(String value) {
     return _createOperator('', value, CQLOperatorCompare.fcNotLikeFull)
-        .asString();
+        .asResult<String>();
   }
 
   @override
   String isNotLikeLeft(String value) {
     return _createOperator('', value, CQLOperatorCompare.fcNotLikeLeft)
-        .asString();
+        .asResult<String>();
   }
 
   @override
   String isNotLikeRight(String value) {
     return _createOperator('', value, CQLOperatorCompare.fcNotLikeRight)
-        .asString();
+        .asResult<String>();
   }
 
   @override
   String isNotNull() {
-    return _createOperator('', null, CQLOperatorCompare.fcIsNotNull).asString();
+    return _createOperator('', null, CQLOperatorCompare.fcIsNotNull)
+        .asResult<String>();
   }
 
   @override
   String isNull() {
-    return _createOperator('', null, CQLOperatorCompare.fcIsNull).asString();
+    return _createOperator('', null, CQLOperatorCompare.fcIsNull)
+        .asResult<String>();
   }
 }

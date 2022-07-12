@@ -14,10 +14,10 @@ class CQLGroupBy extends CQLSection implements ICQLGroupBy {
   ICQLNames get columns => _columns;
 
   @override
-  String serialize() {
+  T serialize<T extends Object>() {
     return isEmpty()
-        ? ''
-        : Utils.instance.concat(['GROUP BY', _columns.serialize()]);
+        ? '' as T
+        : Utils.instance.concat(['GROUP BY', _columns.serialize<T>()]) as T;
   }
 
   @override

@@ -33,19 +33,17 @@ class CQLInsert extends CQLSection implements ICQLInsert {
   }
 
   @override
-  ICQLNames columns() {
-    return _columns;
-  }
+  ICQLNames columns() => _columns;
 
   @override
-  String serialize() {
+  T? serialize<T extends Object>() {
     String result = '';
 
     if (!isEmpty()) {
       result = Utils.instance.concat(['INSERT INTO ', _tableName]);
       if (_columns.count() > 0) {
         result =
-            Utils.instance.concat([result, ' (', _columns.serialize(), ')']);
+            Utils.instance.concat([result, ' (', _columns.serialize<T>(), ')']);
       } else {
         result = Utils.instance
             .concat([result, _serializeNameValuePairsForInsert(_values)]);
@@ -54,7 +52,7 @@ class CQLInsert extends CQLSection implements ICQLInsert {
       result = '';
     }
 
-    return result;
+    return result as T;
   }
 
   @override

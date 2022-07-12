@@ -4,11 +4,17 @@ CQLBr é um framework opensource que provê escritas gerando o script SQL, atrav
 
 Durante o desenvolvimento de software, é evidente a preocupação em que se tem em aumentar a produtividade e manter a compatibilidade entre os possíveis bancos que um sistema pode usar. No que se refere a sintaxe de banco de dados, temos em alguns casos, incompatibilidades entre comandos SQL, exigindo assim, a necessidade de um maior controle na escrita de cada banco, e foi para ajudar nesse ponto crítico que CQLBr nasceu, ele foi projetado para que a escrita de querys seja única, de forma funcional e orientada a objeto, possibilitando assim a mesma escrita feita pelo framework, gerar querys diferentes conforme o banco selecionado, o qual pode ser mudado de forma muito simples, bastando selecionar um dos modelos implementados no CQLBr Framework, sem ter que re-faturar diversas querys espalhadas pelas milhares de linhas de código.
 
-## COMO COMEÇAR A USAR
+## Flutter CQLBr Core
 
-```dart
-  CQLBr cqlbr = CQLBr(select: CQLSelectFirebird());
-```
+<img src="https://www.isaquepinheiro.com.br/projetos/cqlbr-framework-for-delphilazarus-65199.png" width="1280" height="500">
+
+## Dependência para:
+
+- [CQLBr Framework for Dart/Flutter (Firebird)](https://github.com/isaquepinheiro/flutter_cqlbr_firebird)
+- [CQLBr Framework for Dart/Flutter (Firestore)](https://github.com/isaquepinheiro/flutter_cqlbr_firestore)
+- [CQLBr Framework for Dart/Flutter (SQLite)](https://github.com/isaquepinheiro/flutter_cqlbr_sqlite)
+- [CQLBr Framework for Dart/Flutter (MongoDB)](https://github.com/isaquepinheiro/flutter_cqlbr_mongodb)
+
 
 TODO: Ao instâncias o CQL, deve-se injetar a ele o nodelo do banco que se vai usar, isso poderá ser feito pode parâmetro em seu sistema, configurando qual modelo será injetado.
 

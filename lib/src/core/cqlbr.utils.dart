@@ -7,11 +7,11 @@ class Utils {
 
   static Utils get instance => _instance ??= Utils._();
 
-  String concat(List<String> elements, {String delimiter = ' '}) {
+  String concat(List<dynamic> elements, {String delimiter = ' '}) {
     String result = '';
 
-    for (final String value in elements) {
-      if (value.isNotEmpty) {
+    for (final dynamic value in elements) {
+      if (value.toString().isNotEmpty) {
         result = _addToList(result, delimiter, value);
       }
     }
@@ -54,7 +54,7 @@ class Utils {
         return '${date.year}-${date.month}-${date.day}';
       case Database.dbnDB2:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnFirebase:
+      case Database.dbnFirestore:
         return '${date.year}-${date.month}-${date.day}';
       case Database.dbnFirebird:
         return '${date.year}-${date.month}-${date.day}';
@@ -89,7 +89,7 @@ class Utils {
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
       case Database.dbnDB2:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnFirebase:
+      case Database.dbnFirestore:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
       case Database.dbnFirebird:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
@@ -124,7 +124,7 @@ class Utils {
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
       case Database.dbnDB2:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnFirebase:
+      case Database.dbnFirestore:
         return 'CHAR_TO_UUID(' '$guid' ')';
       case Database.dbnFirebird:
         return 'CHAR_TO_UUID(' '$guid' ')';
@@ -151,13 +151,13 @@ class Utils {
     }
   }
 
-  String _addToList(String list, String delimiter, String element) {
+  String _addToList(String list, String delimiter, dynamic element) {
     String result = list;
 
     if (result.isNotEmpty) {
       result += delimiter;
     }
-    result += element;
+    result += element.toString();
 
     return result;
   }

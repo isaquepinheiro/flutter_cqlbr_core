@@ -22,17 +22,15 @@ class CQLUpdate extends CQLSection implements ICQLUpdate {
   set tableName(String value) => _tableName = value;
 
   @override
-  String serialize() {
-    if (!isEmpty()) {
-      return Utils.instance.concat([
-        'UPDATE',
-        _tableName,
-        'SET',
-        _serializeNameValuePairsForUpdate(_values),
-      ]);
-    }
-
-    return '';
+  T? serialize<T extends Object>() {
+    return isEmpty()
+        ? '' as T
+        : Utils.instance.concat([
+            'UPDATE',
+            _tableName,
+            'SET',
+            _serializeNameValuePairsForUpdate(_values),
+          ]) as T;
   }
 
   @override

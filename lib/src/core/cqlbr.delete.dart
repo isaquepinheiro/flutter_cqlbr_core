@@ -14,13 +14,13 @@ class CQLDelete extends CQLSection implements ICQLDelete {
   }
 
   @override
-  String serialize() {
+  T? serialize<T extends Object>() {
     return isEmpty()
-        ? ''
+        ? '' as T
         : Utils.instance.concat([
             'DELETE FROM',
             _tableNames.serialize(),
-          ]);
+          ]) as T;
   }
 
   @override

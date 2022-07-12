@@ -20,7 +20,7 @@ class CQLSelect extends CQLSection implements ICQLSelect {
 
   @override
   ICQLSelectQualifiers get qualifiers => _qualifiers;
-  set qualifiers$(ICQLSelectQualifiers value) {
+  set qualifiers(ICQLSelectQualifiers value) {
     _qualifiers = value;
   }
 
@@ -50,9 +50,9 @@ class CQLSelect extends CQLSection implements ICQLSelect {
   }
 
   @override
-  String serialize() {
+  T? serialize<T extends Object>() {
     return isEmpty()
-        ? ''
+        ? '' as T
         : Utils.instance.concat([
             'SELECT',
             _qualifiers.serializeDistinct(),
@@ -60,7 +60,7 @@ class CQLSelect extends CQLSection implements ICQLSelect {
             _columns.serialize(),
             'FROM',
             _tableNames.serialize(),
-          ]);
+          ]) as T;
   }
 
   @override

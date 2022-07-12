@@ -58,21 +58,21 @@ class CQLExpression extends ICQLExpression {
   }
 
   @override
-  String serialize([bool addParens = false]) {
+  T serialize<T extends Object>([bool addParens = false]) {
     if (isEmpty()) {
-      return '';
+      return '' as T;
     }
     switch (_operation) {
       case ExpressionOperation.eoNone:
-        return _serializeWhere(addParens);
+        return _serializeWhere(addParens) as T;
       case ExpressionOperation.eoAnd:
-        return _serializeAND();
+        return _serializeAND() as T;
       case ExpressionOperation.eoOr:
-        return _serializeOR();
+        return _serializeOR() as T;
       case ExpressionOperation.eoOperation:
-        return _serializeOperator();
+        return _serializeOperator() as T;
       case ExpressionOperation.eoFunction:
-        return _serializeFunction();
+        return _serializeFunction() as T;
       default:
         throw Exception(
             'CQLExpression.Serialize: Unknown expression operation: $_operation');
@@ -85,28 +85,25 @@ class CQLExpression extends ICQLExpression {
 
   String _serializeAND() {
     return Utils.instance
-        .concat([_left!.serialize(true), 'AND', _right!.serialize(true)]);
+        .concat([_left?.serialize(true), 'AND', _right?.serialize(true)]);
   }
 
   String _serializeOR() {
     final String result = Utils.instance
-        .concat([_left!.serialize(true), 'OR', _right!.serialize(true)]);
+        .concat([_left?.serialize(true), 'OR', _right?.serialize(true)]);
 
     return '($result)';
   }
 
   String _serializeOperator() {
-    final result = Utils.instance
-        .concat([_left!.serialize(false), _right!.serialize(false)]);
+    final result =
+        Utils.instance.concat([_left?.serialize(), _right?.serialize()]);
 
     return '($result)';
   }
 
   String _serializeFunction() {
-    return Utils.instance.concat([
-      _left!.serialize(false),
-      _right!.serialize(false),
-    ]);
+    return Utils.instance.concat([_left!.serialize(), _right!.serialize()]);
   }
 }
 
@@ -164,5 +161,5 @@ class CQLCriteriaExpression implements ICQLCriteriaExpression {
   }
 
   @override
-  String asString() => _expression!.serialize();
+  T asResult<T extends Object>() => _expression!.serialize<T>();
 }

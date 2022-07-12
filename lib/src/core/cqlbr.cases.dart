@@ -88,7 +88,7 @@ class CQLCase implements ICQLCase {
   set elseExpression(ICQLExpression value) => _elseExpression = value;
 
   @override
-  String serialize() {
+  T serialize<T extends Object>() {
     String result = 'CASE';
 
     if (!_caseExpression.isEmpty()) {
@@ -111,7 +111,7 @@ class CQLCase implements ICQLCase {
     }
     result = Utils.instance.concat([result, 'END']);
 
-    return result;
+    return result as T;
   }
 
   @protected

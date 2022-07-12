@@ -19,7 +19,7 @@ enum Database {
   dbnInterbase(name: 'dbnInterbase'),
   dbnDB2(name: 'dbnDB2'),
   dbnMongoDB(name: 'dbnMongoDB'),
-  dbnFirebase(name: 'dbnFirebase'),
+  dbnFirestore(name: 'dbnFirestore'),
   dbnASA(name: 'dbnASA'),
   dbnInformix(name: 'dbnInformix'),
   dbnNexusDB(name: 'dbnNexusDB'),
@@ -51,7 +51,7 @@ abstract class ICQLExpression {
   set right(ICQLExpression? value);
   String get term;
   set term(String value);
-  String serialize([bool addParens = false]);
+  T serialize<T extends Object>([bool addParens = false]);
   bool isEmpty();
   void copyWith(ICQLExpression node);
   void clear();
@@ -66,7 +66,7 @@ abstract class ICQLCriteriaExpression {
   // set expression$(ICQLExpression? value);
   // ICQLExpression? get lastAnd;
   // set lastAnd(ICQLExpression? value);
-  String asString();
+  T asResult<T extends Object>();
 }
 
 abstract class ICQLCaseWhenThen {
@@ -91,7 +91,7 @@ abstract class ICQLCase {
   set elseExpression(ICQLExpression value);
   ICQLCaseWhenList get whenList;
   set whenList(ICQLCaseWhenList value);
-  String serialize();
+  T serialize<T extends Object>();
 }
 
 abstract class ICQLFunctions {
@@ -174,7 +174,7 @@ abstract class ICQL {
   ICQL year$(String value);
   ICQL concat$(List<String> value);
   ICQLFunctions asFun$();
-  String asString();
+  T asResult<T extends Object>();
 }
 
 abstract class ICQLCriteriaCase {
@@ -194,7 +194,7 @@ abstract class ICQLName {
   set case$(ICQLCase value);
   String get alias;
   set alias(String value);
-  String serialize();
+  T serialize<T extends Object>();
   bool isEmpty();
   void clear();
 }
@@ -205,7 +205,7 @@ abstract class ICQLNames {
   ICQLName columns(int idx);
   int count();
   bool isEmpty();
-  String serialize();
+  T serialize<T extends Object>();
   void clear();
 }
 
@@ -221,23 +221,23 @@ abstract class ICQLSelect extends ICQLSection {
   ICQLSelectQualifiers get qualifiers;
   Database get driver;
   set driver(Database value);
-  String serialize();
+  T? serialize<T extends Object>();
 }
 
 abstract class ICQLWhere extends ICQLSection {
-  String serialize();
+  T? serialize<T extends Object>();
   ICQLExpression get expression;
   set expression(ICQLExpression value);
 }
 
 abstract class ICQLOrderBy extends ICQLSection {
   ICQLNames columns();
-  String serialize();
+  T? serialize<T extends Object>();
 }
 
 abstract class ICQLDelete extends ICQLSection {
   ICQLNames get tableNames;
-  String serialize();
+  T? serialize<T extends Object>();
 }
 
 enum JoinType {
@@ -262,13 +262,13 @@ abstract class ICQLJoin extends ICQLSection {
 
 abstract class ICQLGroupBy extends ICQLSection {
   ICQLNames get columns;
-  String serialize();
+  T serialize<T extends Object>();
 }
 
 abstract class ICQLHaving extends ICQLSection {
   ICQLExpression get expression;
   set expression(ICQLExpression value);
-  String serialize();
+  T serialize<T extends Object>();
 }
 
 abstract class ICQLNameValuePairs {
@@ -285,14 +285,14 @@ abstract class ICQLInsert extends ICQLSection {
   set tableName(String value);
   ICQLNames columns();
   ICQLNameValuePairs values();
-  String serialize();
+  T? serialize<T extends Object>();
 }
 
 abstract class ICQLUpdate extends ICQLSection {
   String get tableName;
   set tableName(String value);
   ICQLNameValuePairs values();
-  String serialize();
+  T? serialize<T extends Object>();
 }
 
 enum OrderByDirection {
@@ -345,15 +345,15 @@ abstract class ICQLJoins {
   setJoins(int idx, ICQLJoin value);
   bool isEmpty();
   int count();
-  String serialize();
+  T serialize<T extends Object>();
   void clear();
 }
 
 abstract class ICQLNameValue {
   String get name;
   set name(String value);
-  String get value;
-  set value(String value);
+  dynamic get value;
+  set value(dynamic value);
   bool isEmpty();
   void clear();
 }
@@ -371,7 +371,7 @@ abstract class ICQLAST {
   ICQLDelete delete();
   ICQLInsert insert();
   ICQLUpdate update();
-  ICQLJoins joins$();
+  ICQLJoins joins();
   ICQLGroupBy groupBy();
   ICQLHaving having();
   ICQLOrderBy orderBy();
@@ -381,7 +381,7 @@ abstract class ICQLAST {
 }
 
 abstract class ICQLSerialize {
-  String asString(ICQLAST ast);
+  T asResult<T extends Object>(ICQLAST ast);
 }
 
 enum CQLOperatorCompare {
@@ -439,7 +439,7 @@ abstract class ICQLOperator {
   set value(dynamic value);
   CQLDataFieldType get dataType;
   set dataType(CQLDataFieldType value);
-  String asString();
+  T asResult<T extends Object>();
 }
 
 abstract class ICQLOperators {

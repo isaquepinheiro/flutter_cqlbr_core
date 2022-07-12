@@ -88,7 +88,7 @@ class CQLJoins implements ICQLJoins {
   }
 
   @override
-  String serialize() {
+  T serialize<T extends Object>() {
     String result = '';
 
     for (final ICQLJoin join in _joins) {
@@ -102,7 +102,7 @@ class CQLJoins implements ICQLJoins {
       ]);
     }
 
-    return result;
+    return result as T;
   }
 
   String _serializeJoinType(ICQLJoin join) {

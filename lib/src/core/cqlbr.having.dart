@@ -16,10 +16,10 @@ class CQLHaving extends CQLSection implements ICQLHaving {
   set expression(ICQLExpression value) => _expression = value;
 
   @override
-  String serialize() {
+  T serialize<T extends Object>() {
     return isEmpty()
-        ? ''
-        : Utils.instance.concat(['HAVING', _expression.serialize()]);
+        ? '' as T
+        : Utils.instance.concat(['HAVING', _expression.serialize<T>()]) as T;
   }
 
   @override
