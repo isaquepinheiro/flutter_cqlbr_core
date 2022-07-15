@@ -9,7 +9,7 @@ enum Operator {
   const Operator({required this.name});
 }
 
-enum Database {
+enum CQLDatabase {
   dbnSQLServer(name: 'dbnSQLServer'),
   dbnMySQL(name: 'dbnMySQL'),
   dbnPostgreSQL(name: 'dbnPostgreSQL'),
@@ -27,10 +27,10 @@ enum Database {
 
   final String name;
 
-  const Database({required this.name});
+  const CQLDatabase({required this.name});
 }
 
-enum ExpressionOperation {
+enum CQLExpressionOperation {
   eoNone(name: 'eoNone'),
   eoAnd(name: 'eoAnd'),
   eoOr(name: 'eoOr'),
@@ -39,18 +39,20 @@ enum ExpressionOperation {
 
   final String name;
 
-  const ExpressionOperation({required this.name});
+  const CQLExpressionOperation({required this.name});
 }
 
 abstract class ICQLExpression {
   ICQLExpression? get left;
   set left(ICQLExpression? value);
-  ExpressionOperation get operation;
-  set operation(ExpressionOperation value);
   ICQLExpression? get right;
   set right(ICQLExpression? value);
-  String get term;
-  set term(String value);
+  dynamic get term;
+  set term(dynamic value);
+  CQLExpressionOperation get operation;
+  set operation(CQLExpressionOperation value);
+  CQLOperatorCompare get compare;
+  set compare(CQLOperatorCompare value);
   T serialize<T extends Object>([bool addParens = false]);
   bool isEmpty();
   void copyWith(ICQLExpression node);
@@ -58,11 +60,13 @@ abstract class ICQLExpression {
 }
 
 abstract class ICQLCriteriaExpression {
-  ICQLCriteriaExpression and(dynamic expression);
-  ICQLCriteriaExpression or(dynamic expression);
-  ICQLCriteriaExpression ope(dynamic expression);
+  ICQLCriteriaExpression and(ICQLOperator expression);
+  ICQLCriteriaExpression or(ICQLOperator expression);
+  ICQLCriteriaExpression ope(ICQLOperator expression);
   ICQLCriteriaExpression func(dynamic expression);
   ICQLExpression? get expression;
+  ICQLCriteriaExpression call(
+      {ICQLExpression? expression, String expressionStr = ''});
   // set expression$(ICQLExpression? value);
   // ICQLExpression? get lastAnd;
   // set lastAnd(ICQLExpression? value);
@@ -219,8 +223,8 @@ abstract class ICQLSelect extends ICQLSection {
   ICQLNames get columns;
   ICQLNames get tableNames;
   ICQLSelectQualifiers get qualifiers;
-  Database get driver;
-  set driver(Database value);
+  CQLDatabase get driver;
+  set driver(CQLDatabase value);
   T? serialize<T extends Object>();
 }
 
@@ -385,6 +389,7 @@ abstract class ICQLSerialize {
 }
 
 enum CQLOperatorCompare {
+  fcNone(name: ''),
   fcEqual(name: '='),
   fcNotEqual(name: '<>'),
   fcGreater(name: '>'),
@@ -439,28 +444,50 @@ abstract class ICQLOperator {
   set value(dynamic value);
   CQLDataFieldType get dataType;
   set dataType(CQLDataFieldType value);
-  T asResult<T extends Object>();
 }
 
 abstract class ICQLOperators {
-  String isEqual(dynamic value);
-  String isNotEqual(dynamic value);
-  String isGreaterThan(dynamic value);
-  String isGreaterEqThan(dynamic value);
-  String isLessThan(dynamic value);
-  String isLessEqThan(dynamic value);
-  String isNull();
-  String isNotNull();
-  String isLike(String value);
-  String isLikeFull(String value);
-  String isLikeLeft(String value);
-  String isLikeRight(String value);
-  String isNotLike(String value);
-  String isNotLikeFull(String value);
-  String isNotLikeLeft(String value);
-  String isNotLikeRight(String value);
-  String isIn(dynamic value);
-  String isNotIn(dynamic value);
-  String isExists(String value);
-  String isNotExists(String value);
+  ICQLOperator isEqual(dynamic value);
+  ICQLOperator isNotEqual(dynamic value);
+  ICQLOperator isGreaterThan(dynamic value);
+  ICQLOperator isGreaterEqThan(dynamic value);
+  ICQLOperator isLessThan(dynamic value);
+  ICQLOperator isLessEqThan(dynamic value);
+  ICQLOperator isNull();
+  ICQLOperator isNotNull();
+  ICQLOperator isLike(String value);
+  ICQLOperator isLikeFull(String value);
+  ICQLOperator isLikeLeft(String value);
+  ICQLOperator isLikeRight(String value);
+  ICQLOperator isNotLike(String value);
+  ICQLOperator isNotLikeFull(String value);
+  ICQLOperator isNotLikeLeft(String value);
+  ICQLOperator isNotLikeRight(String value);
+  ICQLOperator isIn(dynamic value);
+  ICQLOperator isNotIn(dynamic value);
+  ICQLOperator isExists(String value);
+  ICQLOperator isNotExists(String value);
 }
+
+// abstract class ICQLOperators {
+//   String isEqual(dynamic value);
+//   String isNotEqual(dynamic value);
+//   String isGreaterThan(dynamic value);
+//   String isGreaterEqThan(dynamic value);
+//   String isLessThan(dynamic value);
+//   String isLessEqThan(dynamic value);
+//   String isNull();
+//   String isNotNull();
+//   String isLike(String value);
+//   String isLikeFull(String value);
+//   String isLikeLeft(String value);
+//   String isLikeRight(String value);
+//   String isNotLike(String value);
+//   String isNotLikeFull(String value);
+//   String isNotLikeLeft(String value);
+//   String isNotLikeRight(String value);
+//   String isIn(dynamic value);
+//   String isNotIn(dynamic value);
+//   String isExists(String value);
+//   String isNotExists(String value);
+// }

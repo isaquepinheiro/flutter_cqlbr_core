@@ -7,14 +7,14 @@ import 'cqlbr.operators.dart';
 import 'cqlbr.update.dart';
 
 class CQLBrRegister {
-  late final Map<Database, ICQLSelect> cqlSelect;
-  late final Map<Database, ICQLInsert> cqlInsert;
-  late final Map<Database, ICQLUpdate> cqlUpdate;
-  late final Map<Database, ICQLDelete> cqlDelete;
-  late final Map<Database, ICQLWhere> cqlWhere;
-  late final Map<Database, ICQLSerialize> cqlSerialize;
-  late final Map<Database, ICQLFunctions> cqlFunctions;
-  late final Map<Database, ICQLOperators> cqlOperators;
+  late final Map<CQLDatabase, ICQLSelect> cqlSelect;
+  late final Map<CQLDatabase, ICQLInsert> cqlInsert;
+  late final Map<CQLDatabase, ICQLUpdate> cqlUpdate;
+  late final Map<CQLDatabase, ICQLDelete> cqlDelete;
+  late final Map<CQLDatabase, ICQLWhere> cqlWhere;
+  late final Map<CQLDatabase, ICQLSerialize> cqlSerialize;
+  late final Map<CQLDatabase, ICQLFunctions> cqlFunctions;
+  late final Map<CQLDatabase, ICQLOperators> cqlOperators;
 
   static CQLBrRegister? _instance;
 
@@ -31,73 +31,73 @@ class CQLBrRegister {
 
   static CQLBrRegister get instance => _instance ??= CQLBrRegister._();
 
-  void registerSelect(Database database, ICQLSelect select) {
+  void registerSelect(CQLDatabase database, ICQLSelect select) {
     cqlSelect[database] = select;
   }
 
-  void registerInsert(Database database, ICQLInsert insert) {
+  void registerInsert(CQLDatabase database, ICQLInsert insert) {
     cqlInsert[database] = insert;
   }
 
-  void registerUpdate(Database database, ICQLUpdate update) {
+  void registerUpdate(CQLDatabase database, ICQLUpdate update) {
     cqlUpdate[database] = update;
   }
 
-  void registerDelete(Database database, ICQLDelete delete) {
+  void registerDelete(CQLDatabase database, ICQLDelete delete) {
     cqlDelete[database] = delete;
   }
 
-  void registerWhere(Database database, ICQLWhere where) {
+  void registerWhere(CQLDatabase database, ICQLWhere where) {
     cqlWhere[database] = where;
   }
 
-  void registerSerialize(Database database, ICQLSerialize serialize) {
+  void registerSerialize(CQLDatabase database, ICQLSerialize serialize) {
     cqlSerialize[database] = serialize;
   }
 
-  void registerFunctions(Database database, ICQLFunctions functions) {
+  void registerFunctions(CQLDatabase database, ICQLFunctions functions) {
     cqlFunctions[database] = functions;
   }
 
-  void registerOperators(Database database, ICQLOperators operators) {
+  void registerOperators(CQLDatabase database, ICQLOperators operators) {
     cqlOperators[database] = operators;
   }
 
-  ICQLSelect select(Database database) {
+  ICQLSelect select(CQLDatabase database) {
     if (!cqlSelect.containsKey(database)) {
       throw Exception('Select not registered for database: $database');
     }
     return cqlSelect[database]!;
   }
 
-  ICQLInsert insert(Database database) {
+  ICQLInsert insert(CQLDatabase database) {
     return cqlInsert[database] ?? CQLInsert();
   }
 
-  ICQLUpdate update(Database database) {
+  ICQLUpdate update(CQLDatabase database) {
     return cqlUpdate[database] ?? CQLUpdate();
   }
 
-  ICQLDelete delete(Database database) {
+  ICQLDelete delete(CQLDatabase database) {
     return cqlDelete[database] ?? CQLDelete();
   }
 
-  ICQLWhere where(Database database) {
+  ICQLWhere where(CQLDatabase database) {
     return cqlWhere[database] ?? CQLWhere();
   }
 
-  ICQLSerialize serialize(Database database) {
+  ICQLSerialize serialize(CQLDatabase database) {
     if (!cqlSerialize.containsKey(database)) {
       throw Exception('Serialize not registered for database: $database');
     }
     return cqlSerialize[database]!;
   }
 
-  ICQLFunctions? functions(Database database) {
+  ICQLFunctions? functions(CQLDatabase database) {
     return cqlFunctions[database];
   }
 
-  ICQLOperators operators(Database database) {
+  ICQLOperators operators(CQLDatabase database) {
     return cqlOperators[database] ?? CQLOperators(database: database);
   }
 }

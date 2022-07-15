@@ -8,6 +8,7 @@ export 'src/core/cqlbr.functions.abstract.dart';
 export 'src/core/cqlbr.functions.dart';
 export 'src/core/cqlbr.groupby.dart';
 export 'src/core/cqlbr.having.dart';
+export 'src/core/cqlbr.injection.dart';
 export 'src/core/cqlbr.insert.dart';
 export 'src/core/cqlbr.joins.dart';
 export 'src/core/cqlbr.name.dart';

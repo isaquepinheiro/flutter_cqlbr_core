@@ -20,7 +20,7 @@ class CQLAST implements ICQLAST {
   late ICQLNames? _astColumns;
   late ICQLName? _astName;
 
-  CQLAST({required Database database}) {
+  CQLAST({required CQLDatabase database}) {
     _select = CQLBrRegister.instance.select(database);
     _insert = CQLBrRegister.instance.insert(database);
     _update = CQLBrRegister.instance.update(database);

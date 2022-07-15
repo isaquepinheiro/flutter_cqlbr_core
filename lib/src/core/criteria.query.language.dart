@@ -36,6 +36,11 @@ class CQLBr implements ICQL {
     _functions = CQLFunctions(database: _select.driver);
     _activeExpression = null;
     _activeValues = null;
+
+    // Caso não seja informado o cirteria por outro, o padrão será esse
+    if (!injbr.containsKey<ICQLCriteriaExpression>()) {
+      injbr.register<ICQLCriteriaExpression>((i) => CQLCriteriaExpression());
+    }
   }
 
   ICQLSelect get select => _select;
@@ -52,8 +57,8 @@ class CQLBr implements ICQL {
 
   @override
   ICQL all$() {
-    if (_select.driver == Database.dbnMongoDB ||
-        _select.driver == Database.dbnFirestore) {
+    if (_select.driver == CQLDatabase.dbnMongoDB ||
+        _select.driver == CQLDatabase.dbnFirestore) {
       return this;
     }
 
@@ -63,7 +68,7 @@ class CQLBr implements ICQL {
   @override
   ICQL and$(dynamic expression) {
     _activeOperator = Operator.opeAnd;
-    _activeExpression!.and(expression);
+    _activeExpression!.and(CQLOperator(value: expression));
 
     return this;
   }
@@ -254,7 +259,8 @@ class CQLBr implements ICQL {
       expression$(Utils.instance.sqlParamsToStr(term));
     }
 
-    return CQLCriteriaExpression(expressionStr: term);
+//    return CQLCriteriaExpression(expressionStr: term);
+    return injbr.get<ICQLCriteriaExpression>()(expressionStr: term);
   }
 
   @override
@@ -271,9 +277,11 @@ class CQLBr implements ICQL {
   @override
   ICQL from$(dynamic tableName, [String alias = '']) {
     if (tableName is ICQLCriteriaExpression) {
-      from$('(${(tableName as CQLCriteriaExpression).asResult<String>()})');
+      final ICQLCriteriaExpression fromType = tableName;
+      from$('(${fromType.asResult<String>()})');
     } else if (tableName is ICQL) {
-      from$('(${(tableName as CQLBr).asResult()})');
+      final ICQL fromType = tableName;
+      from$('(${fromType.asResult()})');
     }
     _assertSection([Section.secSelect, Section.secDelete]);
     _ast.astName = _ast.astTableNames!.add();
@@ -692,19 +700,6 @@ class CQLBr implements ICQL {
     }
   }
 
-  ICQL _createJoin(JoinType joinType, String tableName) {
-    _activeSection = Section.secJoin;
-    final ICQLJoin join = _ast.joins().add;
-    join.joinType = joinType;
-    _ast.astName = join.joinedTable;
-    _ast.astName!.name = tableName;
-    _ast.astSection = join;
-    _ast.astColumns = null;
-    _activeExpression = CQLCriteriaExpression(expression: join.condition);
-
-    return this;
-  }
-
   ICQL _internalSet(String columnName, dynamic columnValue) {
     _assertSection([Section.secInsert, Section.secUpdate]);
     final ICQLNameValue pair = _activeValues!.add();
@@ -798,12 +793,29 @@ class CQLBr implements ICQL {
     _activeValues = null;
   }
 
+  ICQL _createJoin(JoinType joinType, String tableName) {
+    _activeSection = Section.secJoin;
+    final ICQLJoin join = _ast.joins().add;
+    join.joinType = joinType;
+    _ast.astName = join.joinedTable;
+    _ast.astName!.name = tableName;
+    _ast.astSection = join;
+    _ast.astColumns = null;
+//    _activeExpression = CQLCriteriaExpression(expression: join.condition);
+    _activeExpression =
+        injbr.get<ICQLCriteriaExpression>()(expression: join.condition);
+
+    return this;
+  }
+
   void _defineSectionWhere() {
     _ast.astSection = _ast.where();
     _ast.astColumns = null;
     _ast.astTableNames = null;
-    _activeExpression =
-        CQLCriteriaExpression(expression: _ast.where().expression);
+    // _activeExpression =
+    //     CQLCriteriaExpression(expression: _ast.where().expression);
+    _activeExpression = injbr.get<ICQLCriteriaExpression>()(
+        expression: _ast.where().expression);
     _activeValues = null;
   }
 
@@ -811,8 +823,10 @@ class CQLBr implements ICQL {
     _ast.astSection = _ast.having();
     _ast.astColumns = null;
 //    _ast.astTableNames = null;
-    _activeExpression =
-        CQLCriteriaExpression(expression: _ast.having().expression);
+    // _activeExpression =
+    //     CQLCriteriaExpression(expression: _ast.having().expression);
+    _activeExpression = injbr.get<ICQLCriteriaExpression>()(
+        expression: _ast.having().expression);
     _activeValues = null;
   }
 }

@@ -2,15 +2,16 @@ import '../interface/cqlbr.interface.dart';
 import 'cqlbr.utils.dart';
 
 class CQLOperator implements ICQLOperator {
-  final Database database;
-  late final CQLOperatorCompare _compare;
+  final CQLDatabase? database;
   late final CQLDataFieldType _dataType;
+  late CQLOperatorCompare _compare;
   late String _columnName;
   late dynamic _value;
 
-  CQLOperator({
-    required this.database,
-  });
+  CQLOperator({this.database, dynamic value}) {
+    _value = value;
+    _compare = CQLOperatorCompare.fcNone;
+  }
 
   @override
   String get columnName => _columnName;
@@ -30,26 +31,19 @@ class CQLOperator implements ICQLOperator {
   @override
   dynamic get value => _value;
   @override
-  set value(var value) => _value = value;
-
-  @override
-  T asResult<T extends Object>() {
-    return Utils.instance.concat([
-      _columnName,
-      _compare.name,
-      _getCompareValue(),
-    ]) as T;
+  set value(dynamic value) {
+    _value = _getCompareValue(value);
   }
 
-  String _getCompareValue() {
-    if (_value == null) {
+  String _getCompareValue(dynamic value) {
+    if (value == null) {
       return 'NULL';
     }
 
     String result = '';
     switch (_dataType) {
       case CQLDataFieldType.dftString:
-        result = _value.toString();
+        result = value.toString();
         switch (_compare) {
           case CQLOperatorCompare.fcLike:
             result = Utils.instance.concat(['\'', result, '\''], delimiter: '');
@@ -83,28 +77,28 @@ class CQLOperator implements ICQLOperator {
         }
         break;
       case CQLDataFieldType.dftInteger:
-        result = _value.toString();
+        result = value.toString();
         break;
       case CQLDataFieldType.dftFloat:
-        result = _value.toString().replaceAll(',', '.');
+        result = value.toString().replaceAll(',', '.');
         break;
       case CQLDataFieldType.dftDate:
-        result = '\'${Utils.instance.dateToSQLFormat(database, _value)}\'';
+        result = '\'${Utils.instance.dateToSQLFormat(database!, value)}\'';
         break;
       case CQLDataFieldType.dftDateTime:
-        result = '\'${Utils.instance.dateTimeToSQLFormat(database, _value)}\'';
+        result = '\'${Utils.instance.dateTimeToSQLFormat(database!, value)}\'';
         break;
       case CQLDataFieldType.dftGuid:
-        result = Utils.instance.guidStrToSQLFormat(database, _value.toString());
+        result = Utils.instance.guidStrToSQLFormat(database!, value.toString());
         break;
       case CQLDataFieldType.dftArray:
-        result = _arrayValueToString();
+        result = _arrayValueToString(value);
         break;
       case CQLDataFieldType.dftBoolean:
-        result = _value.toString();
+        result = value.toString();
         break;
       case CQLDataFieldType.dftText:
-        result = '($_value)';
+        result = '($value)';
         break;
       default:
     }
@@ -112,13 +106,13 @@ class CQLOperator implements ICQLOperator {
     return result;
   }
 
-  String _arrayValueToString() {
-    final List<dynamic> values = [..._value as List<dynamic>];
+  String _arrayValueToString(dynamic values) {
+    final List<dynamic> list = [...values as List<dynamic>];
     String result = '(';
     dynamic value = '';
 
-    for (int i = 0; i < values.length; i++) {
-      value = values[i];
+    for (int i = 0; i < list.length; i++) {
+      value = list[i];
       result += i == 0 ? '' : ', ';
       result += value.runtimeType.toString() == 'String'
           ? '\'$value\''
@@ -131,7 +125,7 @@ class CQLOperator implements ICQLOperator {
 }
 
 class CQLOperators implements ICQLOperators {
-  final Database database;
+  final CQLDatabase database;
 
   CQLOperators({
     required this.database,
@@ -145,15 +139,15 @@ class CQLOperators implements ICQLOperators {
     final CQLOperator result = CQLOperator(
       database: database,
     );
-    result.columnName = columnName;
-    result.compare = compare;
-    result.value = value;
     result.dataType = compare == CQLOperatorCompare.fcIn ||
             compare == CQLOperatorCompare.fcNotIn ||
             compare == CQLOperatorCompare.fcExists ||
             compare == CQLOperatorCompare.fcNotExists
         ? CQLDataFieldType.dftText
         : _resolveDataFieldType(value);
+    result.columnName = columnName;
+    result.compare = compare;
+    result.value = value;
 
     return result;
   }
@@ -178,122 +172,102 @@ class CQLOperators implements ICQLOperators {
   }
 
   @override
-  String isEqual(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcEqual)
-        .asResult<String>();
+  ICQLOperator isEqual(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcEqual);
   }
 
   @override
-  String isExists(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcExists)
-        .asResult<String>();
+  ICQLOperator isExists(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcExists);
   }
 
   @override
-  String isGreaterEqThan(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcGreaterEqual)
-        .asResult<String>();
+  ICQLOperator isGreaterEqThan(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcGreaterEqual);
   }
 
   @override
-  String isGreaterThan(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcGreater)
-        .asResult<String>();
+  ICQLOperator isGreaterThan(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcGreater);
   }
 
   @override
-  String isIn(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcIn)
-        .asResult<String>();
+  ICQLOperator isIn(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcIn);
   }
 
   @override
-  String isLessEqThan(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLessEqual)
-        .asResult<String>();
+  ICQLOperator isLessEqThan(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcLessEqual);
   }
 
   @override
-  String isLessThan(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLess)
-        .asResult<String>();
+  ICQLOperator isLessThan(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcLess);
   }
 
   @override
-  String isLike(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLike)
-        .asResult<String>();
+  ICQLOperator isLike(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcLike);
   }
 
   @override
-  String isLikeFull(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLikeFull)
-        .asResult<String>();
+  ICQLOperator isLikeFull(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcLikeFull);
   }
 
   @override
-  String isLikeLeft(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLikeLeft)
-        .asResult<String>();
+  ICQLOperator isLikeLeft(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcLikeLeft);
   }
 
   @override
-  String isLikeRight(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcLikeRight)
-        .asResult<String>();
+  ICQLOperator isLikeRight(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcLikeRight);
   }
 
   @override
-  String isNotEqual(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotEqual)
-        .asResult<String>();
+  ICQLOperator isNotEqual(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcNotEqual);
   }
 
   @override
-  String isNotExists(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotExists)
-        .asResult<String>();
+  ICQLOperator isNotExists(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcNotExists);
   }
 
   @override
-  String isNotIn(dynamic value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotIn)
-        .asResult<String>();
+  ICQLOperator isNotIn(dynamic value) {
+    return _createOperator('', value, CQLOperatorCompare.fcNotIn);
   }
 
   @override
-  String isNotLike(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotLike)
-        .asResult<String>();
+  ICQLOperator isNotLike(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcNotLike);
   }
 
   @override
-  String isNotLikeFull(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotLikeFull)
-        .asResult<String>();
+  ICQLOperator isNotLikeFull(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcNotLikeFull);
   }
 
   @override
-  String isNotLikeLeft(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotLikeLeft)
-        .asResult<String>();
+  ICQLOperator isNotLikeLeft(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcNotLikeLeft);
   }
 
   @override
-  String isNotLikeRight(String value) {
-    return _createOperator('', value, CQLOperatorCompare.fcNotLikeRight)
-        .asResult<String>();
+  ICQLOperator isNotLikeRight(String value) {
+    return _createOperator('', value, CQLOperatorCompare.fcNotLikeRight);
   }
 
   @override
-  String isNotNull() {
-    return _createOperator('', null, CQLOperatorCompare.fcIsNotNull)
-        .asResult<String>();
+  ICQLOperator isNotNull() {
+    return _createOperator('', null, CQLOperatorCompare.fcIsNotNull);
   }
 
   @override
-  String isNull() {
-    return _createOperator('', null, CQLOperatorCompare.fcIsNull)
-        .asResult<String>();
+  ICQLOperator isNull() {
+    return _createOperator('', null, CQLOperatorCompare.fcIsNull);
   }
 }

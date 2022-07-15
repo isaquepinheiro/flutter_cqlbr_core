@@ -11,7 +11,7 @@ class CQLSelect extends CQLSection implements ICQLSelect {
   @protected
   late final ICQLNames _tableNames;
   late ICQLSelectQualifiers _qualifiers;
-  late Database _driver;
+  late CQLDatabase _driver;
 
   CQLSelect() : super(name: 'Select') {
     _columns = CQLNames();
@@ -25,9 +25,9 @@ class CQLSelect extends CQLSection implements ICQLSelect {
   }
 
   @override
-  Database get driver => _driver;
+  CQLDatabase get driver => _driver;
   @override
-  set driver(Database value) {
+  set driver(CQLDatabase value) {
     _driver = value;
   }
 

@@ -3,7 +3,7 @@ import 'cqlbr.functions.abstract.dart';
 import 'cqlbr.register.dart';
 
 class CQLFunctions extends CQLFunctionAbstract implements ICQLFunctions {
-  late final Database database;
+  late final CQLDatabase database;
 
   CQLFunctions({
     required this.database,

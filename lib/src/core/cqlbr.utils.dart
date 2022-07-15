@@ -46,105 +46,105 @@ class Utils {
     return result;
   }
 
-  String dateToSQLFormat(Database database, DateTime date) {
+  String dateToSQLFormat(CQLDatabase database, DateTime date) {
     switch (database) {
-      case Database.dbnADs:
+      case CQLDatabase.dbnADs:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnASA:
+      case CQLDatabase.dbnASA:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnDB2:
+      case CQLDatabase.dbnDB2:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnFirestore:
+      case CQLDatabase.dbnFirestore:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnFirebird:
+      case CQLDatabase.dbnFirebird:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnInformix:
+      case CQLDatabase.dbnInformix:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnInterbase:
+      case CQLDatabase.dbnInterbase:
         return '${date.month}/${date.year}/${date.day}';
-      case Database.dbnMongoDB:
+      case CQLDatabase.dbnMongoDB:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnMySQL:
+      case CQLDatabase.dbnMySQL:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnNexusDB:
+      case CQLDatabase.dbnNexusDB:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnOracle:
+      case CQLDatabase.dbnOracle:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnPostgreSQL:
+      case CQLDatabase.dbnPostgreSQL:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnSQLServer:
+      case CQLDatabase.dbnSQLServer:
         return '${date.year}-${date.month}-${date.day}';
-      case Database.dbnSQLite:
+      case CQLDatabase.dbnSQLite:
         return '${date.year}-${date.month}-${date.day}';
       default:
         return '${date.year}-${date.month}-${date.day}';
     }
   }
 
-  String dateTimeToSQLFormat(Database database, DateTime date) {
+  String dateTimeToSQLFormat(CQLDatabase database, DateTime date) {
     switch (database) {
-      case Database.dbnADs:
+      case CQLDatabase.dbnADs:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnASA:
+      case CQLDatabase.dbnASA:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnDB2:
+      case CQLDatabase.dbnDB2:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnFirestore:
+      case CQLDatabase.dbnFirestore:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnFirebird:
+      case CQLDatabase.dbnFirebird:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnInformix:
+      case CQLDatabase.dbnInformix:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnInterbase:
+      case CQLDatabase.dbnInterbase:
         return '${date.month}/${date.year}/${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnMongoDB:
+      case CQLDatabase.dbnMongoDB:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnMySQL:
+      case CQLDatabase.dbnMySQL:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnNexusDB:
+      case CQLDatabase.dbnNexusDB:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnOracle:
+      case CQLDatabase.dbnOracle:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnPostgreSQL:
+      case CQLDatabase.dbnPostgreSQL:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnSQLServer:
+      case CQLDatabase.dbnSQLServer:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
-      case Database.dbnSQLite:
+      case CQLDatabase.dbnSQLite:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
       default:
         return '${date.year}-${date.month}-${date.day} ${date.hour}:${date.minute}:${date.second}';
     }
   }
 
-  String guidStrToSQLFormat(Database database, String guid) {
+  String guidStrToSQLFormat(CQLDatabase database, String guid) {
     switch (database) {
-      case Database.dbnADs:
+      case CQLDatabase.dbnADs:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnASA:
+      case CQLDatabase.dbnASA:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnDB2:
+      case CQLDatabase.dbnDB2:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnFirestore:
+      case CQLDatabase.dbnFirestore:
         return 'CHAR_TO_UUID(' '$guid' ')';
-      case Database.dbnFirebird:
+      case CQLDatabase.dbnFirebird:
         return 'CHAR_TO_UUID(' '$guid' ')';
-      case Database.dbnInformix:
+      case CQLDatabase.dbnInformix:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnInterbase:
+      case CQLDatabase.dbnInterbase:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnMongoDB:
+      case CQLDatabase.dbnMongoDB:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnMySQL:
+      case CQLDatabase.dbnMySQL:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnNexusDB:
+      case CQLDatabase.dbnNexusDB:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnOracle:
+      case CQLDatabase.dbnOracle:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnPostgreSQL:
+      case CQLDatabase.dbnPostgreSQL:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnSQLServer:
+      case CQLDatabase.dbnSQLServer:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
-      case Database.dbnSQLite:
+      case CQLDatabase.dbnSQLite:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';
       default:
         return '${guid.substring(0, 8)}-${guid.substring(8, 12)}-${guid.substring(12, 16)}-${guid.substring(16, 20)}-${guid.substring(20, 32)}';

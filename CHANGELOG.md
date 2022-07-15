@@ -1,3 +1,3 @@
-## 0.0.1
+## [0.0.1] - Versão Beta
 
-* TODO: Describe initial release.
+* TODO: Describe initial beta.

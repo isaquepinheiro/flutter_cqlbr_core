@@ -1,39 +1,45 @@
 part of 'cqlbr.expression.dart';
 
 extension CQLCriteriaExpressionAnd on CQLCriteriaExpression {
-  ICQLCriteriaExpression andExt(dynamic value) {
-    if (value is List<String>) {
-      return _andList(value);
-    } else if (value is String) {
-      return _andString(value);
+  ICQLCriteriaExpression andExt(ICQLOperator oper) {
+    if (oper.value is List<String>) {
+      return _andList(oper);
+    } else if (oper.value is String) {
+      return _andString(oper);
     } else {
-      return _andInterface(value);
+      return _andInterface(oper.value);
     }
   }
 
-  ICQLCriteriaExpression _andList(List<String> value) {
-    return _andString(Utils.instance.sqlParamsToStr(value));
+  ICQLCriteriaExpression _andList(ICQLOperator oper) {
+    final List<String> list = oper.value;
+    oper.value = Utils.instance.sqlParamsToStr(list);
+
+    return _andString(oper);
   }
 
-  ICQLCriteriaExpression _andString(String value) {
+  ICQLCriteriaExpression _andString(ICQLOperator oper) {
     final ICQLExpression node = CQLExpression();
-    node.term = value;
+    node.term = oper.value;
+    node.compare = oper.compare;
+
     return _andInterface(node);
   }
 
-  ICQLCriteriaExpression _andInterface(ICQLExpression value) {
+  ICQLCriteriaExpression _andInterface(ICQLExpression expr) {
     final ICQLExpression root = _expression!;
 
     if (root.isEmpty()) {
-      root.copyWith(value);
+      root.copyWith(expr);
       _lastAnd = root;
     } else {
       final ICQLExpression node = CQLExpression();
 
       node.copyWith(root);
       root.left = node;
-      root.operation = ExpressionOperation.eoAnd;
-      root.right = value;
+      root.right = expr;
+      root.compare = expr.compare;
+      root.operation = CQLExpressionOperation.eoAnd;
       _lastAnd = root.right!;
     }
 

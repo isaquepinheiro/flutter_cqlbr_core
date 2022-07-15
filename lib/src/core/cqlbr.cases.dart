@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../interface/cqlbr.interface.dart';
 import 'cqlbr.expression.dart';
+import 'cqlbr.injection.dart';
 import 'cqlbr.utils.dart';
 
 class CQLCaseWhenThen implements ICQLCaseWhenThen {
@@ -150,7 +151,8 @@ class CQLCriteriaCase implements ICQLCriteriaCase {
     if (value is int) {
       else$(value.toString());
     }
-    _lastExpression = CQLCriteriaExpression(expressionStr: value);
+//    _lastExpression = CQLCriteriaExpression(expressionStr: value);
+    _lastExpression = injbr.get<ICQLCriteriaExpression>()(expressionStr: value);
     _case.elseExpression = _lastExpression.expression!;
 
     return this;
@@ -174,7 +176,8 @@ class CQLCriteriaCase implements ICQLCriteriaCase {
       then$(value.toString());
     }
     assert(_case.whenList.count() > 0, 'CQLCriteriaCase.&Then: Missing When');
-    _lastExpression = CQLCriteriaExpression(expressionStr: value);
+//    _lastExpression = CQLCriteriaExpression(expressionStr: value);
+    _lastExpression = injbr.get<ICQLCriteriaExpression>()(expressionStr: value);
     _case.whenList.whenThen(_case.whenList.count() - 1).thenExpression =
         _lastExpression.expression!;
 
@@ -192,7 +195,7 @@ class CQLCriteriaCase implements ICQLCriteriaCase {
       whenThen = _case.whenList.add();
       whenThen.whenExpression = _lastExpression.expression!;
     } else {
-      when$(CQLCriteriaExpression(expressionStr: condition));
+      when$(injbr.get<ICQLCriteriaExpression>()(expressionStr: condition));
     }
 
     return this;
